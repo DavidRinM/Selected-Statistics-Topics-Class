@@ -1,0 +1,1667 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Examen midterm temas selectos de estadística II
+\end_layout
+
+\begin_layout Author
+Rincon Morales David 418080007
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Análisis exploratorio de datos.
+\end_layout
+
+\begin_layout Paragraph
+Al ser una base de datos sumamente extensa se tuvieron problemas de RAM
+ por falta de memoria,a lo cual para poder hacer el tratamiento y análisis
+ exploratorio de los datos, se hizo una división por 
+\begin_inset Quotes eld
+\end_inset
+
+chunks
+\begin_inset Quotes erd
+\end_inset
+
+ con 1M (millón) de registros en cada uno.
+ En el caso del modelo supervisado, sólo se elijieron variables que nos
+ ayudaran a predecir el volumen de rides por hora (pickup), las cuales son:
+\end_layout
+
+\begin_layout Standard
+Lectura de datos
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/david/Pictures/Screenshots/Screenshot from 2021-01-10 23-22-27.png
+	scale 45
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Lectura de datos
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Una vez que ya tenemos nuestras variables, se leyó el archivo 
+\begin_inset Quotes eld
+\end_inset
+
+csv
+\begin_inset Quotes erd
+\end_inset
+
+, asignando los tipos de datos correspondientes para así poder evitar mayor
+ uso de memoria RAM.
+\end_layout
+
+\begin_layout Paragraph
+Como estamos usando el dataset por 
+\begin_inset Quotes eld
+\end_inset
+
+chunk
+\begin_inset Quotes erd
+\end_inset
+
+, elegimos utilizar el primero para así poder analizar y procesar la información.
+ Revisamos si no tenemos datos faltantes:
+\end_layout
+
+\begin_layout Standard
+Datos faltantes
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/david/Pictures/Screenshots/Screenshot from 2021-01-10 23-38-38.png
+	scale 45
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Check for null variables
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+No tenemos datos faltantes, por lo que se procede a limpiar información
+ que no necesitamos.
+ Al manejar datasets por particiones, debemos hacer todos los cálculos por
+ funciones, por lo que nuestra primer función es:
+\end_layout
+
+\begin_layout Standard
+data_filter
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/david/Pictures/Screenshots/Screenshot from 2021-01-10 23-42-51.png
+	scale 40
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Data filter function
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Luego pasamos por otra función llamada 
+\begin_inset Quotes eld
+\end_inset
+
+dates
+\begin_inset Quotes erd
+\end_inset
+
+, la cual hace split de la columna 
+\begin_inset Quotes eld
+\end_inset
+
+tpep_pickup_time
+\begin_inset Quotes erd
+\end_inset
+
+ y la convierte en dos columnas; además, agrega 
+\begin_inset Quotes eld
+\end_inset
+
+pickup_hour
+\begin_inset Quotes erd
+\end_inset
+
+ para posteriormente hacer un catálogo de horas.
+ Finalmente, corremos nuestro chunk de datos por una función llamada 
+\begin_inset Quotes eld
+\end_inset
+
+hours_catalog
+\begin_inset Quotes erd
+\end_inset
+
+ la cual nos regresa la columna 
+\begin_inset Quotes eld
+\end_inset
+
+id_hour
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+hours catalog
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/david/Pictures/Screenshots/Screenshot from 2021-01-11 00-01-00.png
+	scale 35
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Función para catálogo de horas
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Ingeniería de datos.
+\end_layout
+
+\begin_layout Paragraph
+Una vez que ya pasamos por el proceso anterior y creamos nuestro catálogo
+ de horas 
+\begin_inset Quotes eld
+\end_inset
+
+id_hour
+\begin_inset Quotes erd
+\end_inset
+
+, obtenemos el primer y último valor de esa columna para poder definir hora_inic
+ial y hora_final.
+ Luego definimos nuestra ventana de observación, la ventana de desempeño
+ y nuestras anclas.
+\end_layout
+
+\begin_layout Paragraph
+Además, definimos nuestra unidad muestral, nuestro step y nuestras variables
+ continuas y discretas.
+\end_layout
+
+\begin_layout Standard
+variables
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/david/Pictures/Screenshots/Screenshot from 2021-01-11 00-17-31.png
+	scale 45
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Horas, Anclas y Steps
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Posteriormente, pasamos a una función donde nos regrese un dataframe compuesto
+ por todas variedades de nuestras variables, por ejemplo:
+\end_layout
+
+\begin_layout Standard
+trans
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/david/Pictures/Screenshots/Screenshot from 2021-01-11 00-20-07.png
+	scale 30
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Función trans
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Después de tener X listo, creamos Y para luego proceder a la modelación:
+\end_layout
+
+\begin_layout Standard
+y
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/david/Pictures/Screenshots/Screenshot from 2021-01-11 00-36-24.png
+	scale 35
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Creación de Y
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Modelo supervisado.
+\end_layout
+
+\begin_layout Subsection
+Tabla analítica de datos (TAD).
+\end_layout
+
+\begin_layout Paragraph
+Cuando ya tenemos Nuestras dos tablas X, Y, vamos a correr la función 
+\begin_inset Quotes eld
+\end_inset
+
+TAD
+\begin_inset Quotes erd
+\end_inset
+
+, la cual hace un merge entre estas dos tablas sobre la unidad muestral.
+\end_layout
+
+\begin_layout Standard
+tad
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/david/Pictures/Screenshots/Screenshot from 2021-01-11 00-48-01.png
+	scale 40
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+TAD
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Valores ausentes e imputación
+\end_layout
+
+\begin_layout Paragraph
+Luego de haber conseguido la TAD, nos aseguramos si hay valores ausentes
+ en ella.
+ Si hay valores ausentes en TAD, pasamos por una función 
+\begin_inset Quotes eld
+\end_inset
+
+impute
+\begin_inset Quotes erd
+\end_inset
+
+ la cual nos va a regresar dos variables:
+\end_layout
+
+\begin_layout Standard
+imputar
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/david/Pictures/Screenshots/Screenshot from 2021-01-11 01-02-53.png
+	scale 35
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Imputación
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Valores extremos.
+\end_layout
+
+\begin_layout Paragraph
+Para poder cuantificar todos nuestros valores extremos, pasamos nuestro
+ dataset, unidad muestra y TAD a nuestra función 
+\begin_inset Quotes eld
+\end_inset
+
+extreme
+\begin_inset Quotes erd
+\end_inset
+
+ la cual nos imprimirá la cantidad de valores extremos en nuestro chunk
+ de datos.
+\end_layout
+
+\begin_layout Standard
+extremos
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/david/Pictures/Screenshots/Screenshot from 2021-01-11 09-51-37.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Valores extremos
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Como podemos dar cuenta, la cantidad de valores extremos representa un 0.95%
+ de nuestro chunk.
+\end_layout
+
+\begin_layout Subsection
+Modelación.
+\end_layout
+
+\begin_layout Paragraph
+Cuando hayamos conseguido nuestra tabla Xi (imputada), podemos seguir con
+ nuestro modelo.
+ Para ello pasamos a nuestra función 
+\begin_inset Quotes eld
+\end_inset
+
+regression
+\begin_inset Quotes erd
+\end_inset
+
+ la cual necesita los parámetros (tad, tgt, Xi).
+\end_layout
+
+\begin_layout Paragraph
+En esta función vamos a hacer un split de nuestro chunk entre 
+\begin_inset Quotes eld
+\end_inset
+
+train
+\begin_inset Quotes erd
+\end_inset
+
+ y 
+\begin_inset Quotes eld
+\end_inset
+
+test
+\begin_inset Quotes erd
+\end_inset
+
+ para luego buscar los mejores hiperparámetros a través de 
+\begin_inset Quotes eld
+\end_inset
+
+GridSearchCV
+\begin_inset Quotes erd
+\end_inset
+
+ y para ello ya podemos hacer fit de nuestros datos.
+\end_layout
+
+\begin_layout Paragraph
+Para poder verificar nuestro modelo, se imprimen los mean absolute error,
+ primero con los valores de entrenamiento y después los valores para testing:
+\end_layout
+
+\begin_layout Standard
+mean errors
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/david/Pictures/Screenshots/Screenshot from 2021-01-11 01-11-53.png
+	scale 40
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Mean absolute error
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Otra forma de ver la funcionalidad de nuestro modelo, es con las siguientes
+ gráficas.
+ La primer gráfica es con datos de training y la segunda con datos de testing:
+\end_layout
+
+\begin_layout Standard
+graficas
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/david/Pictures/Screenshots/Screenshot from 2021-01-11 01-14-22.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Gráficas del modelo
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Corriendo los chunks
+\end_layout
+
+\begin_layout Paragraph
+Al inicio de esta sección, se comentó que se usaron funciones al correr
+ el proceso y, al momento de decirle a pandas que usaremos chunks, este
+ nos regresa un iterador, el cual podemos usar en un for y así correr todos
+ los modelos y haciendo append a una lista.
+\end_layout
+
+\begin_layout Subsubsection
+Predecir con todos los modelos
+\end_layout
+
+\begin_layout Paragraph
+En estas ocaciones de modelado, lo ideal es usar la media de las predicciones
+ de todos los modelos y así tener un resultado óptimo.
+\end_layout
+
+\begin_layout Subsection
+Persistencia
+\end_layout
+
+\begin_layout Paragraph*
+Ya que este es un modelado bastante pesado computacionalmente, lo ideal
+ es que guardemos todos los modelos de nuestros chunks, para eso usaremos
+ la librería 
+\begin_inset Quotes eld
+\end_inset
+
+pickle
+\begin_inset Quotes erd
+\end_inset
+
+ de la siguiente forma:
+\end_layout
+
+\begin_layout Standard
+pickle
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/david/Pictures/Screenshots/Screenshot from 2021-01-11 01-19-24.png
+	scale 40
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Persistencia modelo supervisado
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Lo que estamos haciendo aquí, es guardar todos los modelos de nuestra lista
+ en un mismo archivo.
+ Si luego queremos leer esos modelos, simplemente los guardamos en una lista.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Modelo no supervisado.
+\end_layout
+
+\begin_layout Subsection
+Lectura de datos y limpieza.
+\end_layout
+
+\begin_layout Paragraph
+En el caso del modelo no supervisado usamos la librería 
+\begin_inset Quotes eld
+\end_inset
+
+Dask
+\begin_inset Quotes erd
+\end_inset
+
+ de computación paralela al leer nuestro dataset y limpiarlo más eficiente.
+ Similar a nuestro modelo supervisado, pasamos las variable que vayamos
+ a utilizar para el clustering:
+\end_layout
+
+\begin_layout Standard
+lectura
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/david/Pictures/Screenshots/Screenshot from 2021-01-11 01-27-22.png
+	scale 45
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Lectura de datos modelo no supervisado
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Una vez leído nuestro 
+\begin_inset Quotes eld
+\end_inset
+
+dask dataframe
+\begin_inset Quotes erd
+\end_inset
+
+ hacemos una descripción para datos ilógicos y procedemos a limpiarlos.
+\end_layout
+
+\begin_layout Standard
+filtro
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/david/Pictures/Screenshots/Screenshot from 2021-01-11 01-31-13.png
+	scale 45
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Limpieza datos modelo no supervisado
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Visualización.
+\end_layout
+
+\begin_layout Paragraph
+Después de haber filtrado los datos, sacamos una muestra de nuestra información
+ y lo convertimos a un dataframe de pandas, luego seleccionamos nuestras
+ variables continuas y procedemos con el procesamiento.
+\end_layout
+
+\begin_layout Subsubsection
+PCA
+\end_layout
+
+\begin_layout Paragraph
+Para las variables que seleccionamos, y al hacer un 
+\begin_inset Quotes eld
+\end_inset
+
+StandardScaler
+\begin_inset Quotes erd
+\end_inset
+
+, obtenemos una explicación de la varianza del 74% en dos dimensiones.
+\end_layout
+
+\begin_layout Standard
+pca
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/david/Pictures/Screenshots/Screenshot from 2021-01-11 01-35-52.png
+	scale 30
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+PCA
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+MDS
+\end_layout
+
+\begin_layout Standard
+mds
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/david/Pictures/Screenshots/Screenshot from 2021-01-11 01-36-53.png
+	scale 30
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+MDS
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+En MDS no podemos ver algún cluster con claridad
+\end_layout
+
+\begin_layout Subsubsection
+T-SNE
+\end_layout
+
+\begin_layout Standard
+tsne
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/david/Pictures/Screenshots/Screenshot from 2021-01-11 01-37-46.png
+	scale 30
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+T-SNE
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+En T-SNE podemos ver un poco mejor algunos clusters
+\end_layout
+
+\begin_layout Subsection
+Número de clusters
+\end_layout
+
+\begin_layout Paragraph
+Luego de haber visto la reducción de dimensiones y el análisis de correlaciones,
+ pasamos a ver una gráfica de 
+\begin_inset Quotes eld
+\end_inset
+
+codo
+\begin_inset Quotes erd
+\end_inset
+
+ para determinar cuántos clusters haremos.
+\end_layout
+
+\begin_layout Standard
+codo
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/david/Pictures/Screenshots/Screenshot from 2021-01-11 01-44-31.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Gráfica de 
+\begin_inset Quotes eld
+\end_inset
+
+codo
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+En este caso vamos a tomar de referencia 7 clusters
+\end_layout
+
+\begin_layout Subsubsection
+Aglomerativo
+\end_layout
+
+\begin_layout Paragraph
+Los porcentajes en este algoritmo son:
+\end_layout
+
+\begin_layout Standard
+aglomerativo
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/david/Pictures/Screenshots/Screenshot from 2021-01-11 01-46-35.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Aglomerativo
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+K-Means
+\end_layout
+
+\begin_layout Paragraph
+Porcenyajes en K-Mean:
+\end_layout
+
+\begin_layout Standard
+k-means
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/david/Pictures/Screenshots/Screenshot from 2021-01-11 01-48-30.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+K-Means
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Gaussian Mixture
+\end_layout
+
+\begin_layout Paragraph
+Como podemos ver, la mezcla Gaussiana nos da una mejor distribución en el
+ cluster
+\end_layout
+
+\begin_layout Standard
+gauss
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/david/Pictures/Screenshots/Screenshot from 2021-01-11 01-49-41.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Gaussiana
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Visualización 2D T-SNE y Gauss
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/david/Pictures/Screenshots/Screenshot from 2021-01-11 01-51-23.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+T-SNE con Gauss
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+En la figura anterior podemos observar que, aunque los clusters están mezclados,
+ algunos colores dominan, en el lado derecho se puede aprecuar un dominio
+ del cluster 4 mientras que en la esquina inferior izquierda hay más cluster
+ 2
+\end_layout
+
+\begin_layout Subsection
+Perfilamiento.
+\end_layout
+
+\begin_layout Paragraph
+Para poder verificar qué variables nos son más útiles para hacer clustering,
+ debemos hacer un perfilamiento considerando el p-value.
+ Una forma alternativa es usando el método 
+\begin_inset Quotes eld
+\end_inset
+
+SelectKBest
+\begin_inset Quotes erd
+\end_inset
+
+, el cual nos dice que todas nuestras variables son significativas.
+\end_layout
+
+\begin_layout Subsection
+Ejemplos.
+\end_layout
+
+\begin_layout Paragraph
+Para observar nuestro clustering, podemos hacer lo siguiente:
+\end_layout
+
+\begin_layout Standard
+ejemplos
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/david/Pictures/Screenshots/Screenshot from 2021-01-11 02-01-58.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Ejemplos modelo no supervisado
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Estrategia de aplicación de los modelos.
+\end_layout
+
+\begin_layout Paragraph
+Algunas propuestas para hacer uso de estos modelos son:
+\end_layout
+
+\begin_layout Subsection
+Modelo supervisado:
+\end_layout
+
+\begin_layout Enumerate
+Predicción de demanda general y/o por zona: Al tener como base la locación
+ donde se tomó el taxi, podemos generalizar para todo Nueva York o para
+ una zona en específico.
+ Además de mejorar costos al reducir el número de taxis dependiendo la hora
+ del día.
+\end_layout
+
+\begin_layout Enumerate
+Predicción taxis disponible: Con una pequeña modificación, podemos predecir
+ cuántos taxis se liberan cada hora para así poder mover a los taxis a las
+ zonas con mayor tráfico de clientes.
+\end_layout
+
+\begin_layout Subsection
+Modelo no supervisado:
+\end_layout
+
+\begin_layout Enumerate
+Clusterización de zonas: Podemos hacer clusters de qué zonas son las que
+ toman viajes más largos/cortos, las zonas con ticket promedio más alto.
+ Y haciendo una combinación con el modelo supervisado, optimizar recursos
+ para obtener mayores ingresos.
+\end_layout
+
+\begin_layout Enumerate
+Clusters con mayor número de pasajeros: Con una modficación podríamos arreglar
+ este algoritmo para mover carros más grandes a zonas donde los viajes tienen
+ más ocupantes.
+\end_layout
+
+\begin_layout Subsection
+Nota.
+\end_layout
+
+\begin_layout Paragraph
+En ambos modelos, las propuestas se pueden implementar de diferentes formas,
+ ya sea que se predija con un servicio cloud a una aplicación web ó podemos
+ exportar los modelos y hacer un dashboard para que equipos de business
+ development tomen las mejores decisiones.
+\end_layout
+
+\begin_layout Subparagraph
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Conclusiones.
+\end_layout
+
+\begin_layout Paragraph
+Al hacer este tipo de proyectos, se debe tener muy en cuenta toda la ingeniería
+ de datos; ya que, si no la hacemos de la forma correcta nuestros modelos
+ serán erroneos y no generalizarán.
+ Por otro lado es interesante ver cómo se desarrolla el backend de muchas
+ de las aplicaciones que usamos en la vida cotidiana en las cuales existen
+ algoritmos de recomendación, mejor ruta, etc.
+\end_layout
+
+\begin_layout Paragraph
+Una alternativa para el modelo supervisado sería probar con el algoritmo
+ de redes neuronales y ver la diferencia de eficiencia comparado con regresión
+ lineal.
+ Además indagar en otras formas de procesamiento de la información; ya que,
+ con chunks es bastante tardado debido a que pandas sólo utiliza un núcleo
+ del procesador, tres posibles soluciones son: pasar la información a una
+ base de datos SQL (aprovechando nuestras funciones), sacando una muestra
+ para así ahorrarnos poder de cómputo ó finalmente usando la librería 
+\begin_inset Quotes eld
+\end_inset
+
+Dask
+\begin_inset Quotes erd
+\end_inset
+
+ de cómputo paralelo para poder procesar la información.
+\end_layout
+
+\begin_layout Section
+Anexos.
+\end_layout
+
+\begin_layout Paragraph
+Los anexo con los códigos en Jupyter empiezan en la siguiente página.
+\end_layout
+
+\end_body
+\end_document
